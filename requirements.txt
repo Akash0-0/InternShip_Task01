@@ -1,0 +1,9 @@
+edge-tts
+faster-whisper
+indictrans2
+langchain-openai
+langgraph
+python-dotenv
+torch
+transformers
+yt-dlp

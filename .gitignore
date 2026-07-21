@@ -1,0 +1,22 @@
+.env
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+
+# Downloaded and generated media
+videos/
+audios/
+dubbed_output/
+*_audio/
+*.mp3
+*.wav
+*.mp4
+*.mkv
+
+# Local tooling
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.DS_Store
