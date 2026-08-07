@@ -1,0 +1,23 @@
+{
+  "rows": 176738,
+  "actionable": 81637,
+  "base_rate_visible": 0.5318607203883715,
+  "precision_at_10": 0.8,
+  "precision_at_50": 0.84,
+  "precision_at_100": 0.82,
+  "expectation_table_mean_ctr_by_band": {
+    "top_3": 1.101,
+    "page_1": 0.5149,
+    "striking": 0.3304,
+    "page_3_5": 0.2289,
+    "deep": 0.0979
+  },
+  "top10_declining": 8,
+  "client_concentration_top50": {
+    "client_73cda7b4e4f265ea": 25,
+    "client_e547b89c05043229": 10,
+    "client_62f4a7e64f5e0096": 7,
+    "client_fef1a8f436438636": 6,
+    "client_23a62021009f63c4": 2
+  }
+}
