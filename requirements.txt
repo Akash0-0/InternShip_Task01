@@ -7,13 +7,3 @@ python-dotenv
 torch
 transformers
 yt-dlp
-pandas
-numpy
-scikit-learn
-duckdb
-matplotlib
-seaborn
-huggingface-hub
-datasets
-jupyterlab
-plotly

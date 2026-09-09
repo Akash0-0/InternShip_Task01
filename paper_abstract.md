@@ -1,4 +1,0 @@
-Title: Ranking Signal Analysis — FlyRank Capstone
-
-Abstract:
-This study asks which safe content and search signals are most strongly associated with visibility and engagement on publisher pages. We build a reproducible feature pipeline on the FlyRank internship warehouse sample, derive a transparent baseline score, and train a RandomForest model to rank pages by expected engagement. On our sample, the model improves over an impressions-based baseline (AUC lift and precision@k gains), identifying inverse average position and impressions as the strongest signals. We convert model outputs into an action-oriented ranked recommendations queue with short reason codes for monitoring, improvement, or rewrite actions. All notebooks, scripts, and outputs required to reproduce the analysis are included in the repository `work/` and `outputs/` folders.
