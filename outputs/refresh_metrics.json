@@ -1,0 +1,6 @@
+{
+  "roc_auc_decline_prob": 0.7772296322854058,
+  "precision_at_100_opportunity": 0.0,
+  "n_train": 24000,
+  "n_test": 6000
+}

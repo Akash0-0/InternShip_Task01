@@ -1,3 +1,32 @@
+# Refresh Opportunity Scoring — Capstone
+
+Reproduce the capstone pipeline locally and generate the deployed paper page.
+
+Prerequisites
+- Python 3.10+ and virtualenv (or similar)
+- Install requirements:
+
+```powershell
+python -m pip install -r requirements.txt
+```
+
+One-command run (prepares features, trains model, and generates evaluation charts)
+
+```powershell
+python -c "import subprocess; subprocess.run(['python','scripts/01_prepare_features.py'], check=True); subprocess.run(['python','scripts/05_train_refresh_model.py'], check=True); subprocess.run(['python','scripts/06_eval_and_chart.py'], check=True)"
+```
+
+Outputs
+- `docs/index.html` — deployed research paper (also served by GitHub Pages if enabled).
+- `submission/paper_url.txt` — the public URL for the paper.
+- `data/processed/refresh_feature_vector.csv` — prepared features.
+- `outputs/refresh_model.joblib` — trained model.
+- `outputs/refresh_metrics.json` — evaluation metrics.
+- `outputs/top_ranked_refresh.csv` — top-ranked refresh candidates.
+- `outputs/charts/` — ROC and Precision@k charts embedded in the paper.
+
+Reproducibility notes
+- Notebooks are available under `work/notebooks/` and include step-by-step analysis and validation audits. Run the one-command line above to reproduce the results presented in the paper.
 # FlyRank ML Internship — Starter Repo
 
 **Applied Search Intelligence: Google Search Ranking & Discoverability**
