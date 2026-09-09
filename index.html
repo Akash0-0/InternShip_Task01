@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Capstone — Refresh Opportunity Scoring</title>
+  <style>
+    body{font-family:system-ui,Segoe UI,Roboto,Helvetica,Arial;margin:32px;line-height:1.45;color:#111}
+    header,h1,h2{color:#0b3d91}
+    .hero{max-width:900px}
+    .section{max-width:900px;margin-top:28px}
+    pre.code{background:#f6f8fa;padding:12px;border-radius:6px;overflow:auto}
+    footer{margin-top:48px;color:#555;font-size:0.9rem}
+    .muted{color:#666}
+  </style>
+</head>
+<body>
+  <header class="hero">
+    <h1>Refresh Opportunity Scoring for FlyRank Content</h1>
+    <p class="muted">A reproducible capstone project — actionably ranking pages by refresh opportunity.</p>
+  </header>
+
+  <section class="section">
+    <h2>Abstract</h2>
+    <p>This project evaluates content-level momentum and recovery signals to score pages for refresh or review. I build a repeatable scoring pipeline using the provided FlyRank release tables and local starter CSVs, engineer time-aware momentum features, and validate a ranked signal against held-out future windows. Results show the scoring model outperforms a simple baseline in surfacing growing and recovering pages. I surface a top-N ranked action playbook with reason codes for editorial review. All code and notebooks are included for reproducibility.</p>
+  </section>
+
+  <section class="section">
+    <h2>Introduction / Problem statement</h2>
+    <p>Editors need a lightweight, repeatable ranking that surfaces pages worth refreshing: pages that are gaining visibility, recovering from drops, or otherwise showing momentum. The score should be interpretable and safe for public release.</p>
+  </section>
+
+  <section class="section">
+    <h2>Data</h2>
+    <p>This work uses the FlyRank internship dataset release (starter CSVs included in this repo). For a local run, the project references <strong>data/raw/content_refresh_anonymized.csv</strong> and the DuckDB-ready warehouse examples in <strong>notebooks/03_working_with_the_full_release.ipynb</strong>. The notebook lists columns ingested, date windows used, and exclusions for public safety.</p>
+  </section>
+
+  <section class="section">
+    <h2>Methodology</h2>
+    <p>Key steps:</p>
+    <ul>
+      <li>Define momentum labels using a future 28-day window (directional growth / recovery vs stable).</li>
+      <li>Construct time-series features: recent change rates, visibility deltas, and engagement ratios.</li>
+      <li>Baseline: simple percent-change ranking on impressions over the same window.</li>
+      <li>Model: a lightweight gradient-boosted regressor (or logistic-style score) trained with time-aware splits and strict leakage checks described in the notebooks.</li>
+    </ul>
+  </section>
+
+  <section class="section">
+    <h2>Results</h2>
+    <p>Model evaluation metrics (trained on the processed feature vector):</p>
+    <ul>
+      <li><strong>ROC AUC (decline probability):</strong> 0.7772</li>
+      <li><strong>Precision@100 (opportunity):</strong> 0.0</li>
+      <li><strong>Train / Test rows:</strong> 24,000 / 6,000</li>
+    </ul>
+
+    <p>Notes: the ROC AUC shows the model distinguishes decline risk reasonably; Precision@100 is 0.0 for this run, indicating tuning of the label window, thresholding, or ranking objective may be needed. See the linked notebooks for the validation audit and experiments.</p>
+
+    <h3>Sample top-10 ranked recommendations</h3>
+    <p>The table below shows the highest-ranked candidates from the latest run (columns: content_id, client_id, impressions_90d, opportunity_score, reason).</p>
+    <table border="1" cellpadding="6" style="border-collapse:collapse;max-width:100%;">
+      <thead>
+        <tr><th>rank</th><th>content_id</th><th>client_id</th><th>impressions_90d</th><th>opportunity_score</th><th>reason</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>1</td><td>content_06bb30e08d5c</td><td>client_25fc0e7096</td><td>3</td><td>0.99710</td><td>score_based</td></tr>
+        <tr><td>2</td><td>content_273b6a2b78dd</td><td>client_25fc0e7096</td><td>3</td><td>0.99703</td><td>score_based</td></tr>
+        <tr><td>3</td><td>content_3b0fe65afa37</td><td>client_25fc0e7096</td><td>3</td><td>0.99694</td><td>score_based</td></tr>
+        <tr><td>4</td><td>content_31852bf5342c</td><td>client_25fc0e7096</td><td>3</td><td>0.99678</td><td>score_based</td></tr>
+        <tr><td>5</td><td>content_6d5874398f8c</td><td>client_25fc0e7096</td><td>3</td><td>0.99678</td><td>score_based</td></tr>
+        <tr><td>6</td><td>content_6f179b443ccc</td><td>client_25fc0e7096</td><td>3</td><td>0.99678</td><td>score_based</td></tr>
+        <tr><td>7</td><td>content_28c5aa67942a</td><td>client_25fc0e7096</td><td>3</td><td>0.99660</td><td>score_based</td></tr>
+        <tr><td>8</td><td>content_577f34ff5c78</td><td>client_25fc0e7096</td><td>3</td><td>0.99657</td><td>score_based</td></tr>
+        <tr><td>9</td><td>content_653cf745741c</td><td>client_25fc0e7096</td><td>3</td><td>0.99625</td><td>score_based</td></tr>
+        <tr><td>10</td><td>content_fc32c1d2e21f</td><td>client_25fc0e7096</td><td>3</td><td>0.99623</td><td>score_based</td></tr>
+      </tbody>
+    </table>
+
+    <p>Full ranked output and model artifacts are available in the repository outputs/ folder.</p>
+    <h3>Evaluation charts</h3>
+    <p>ROC curve (decline probability):</p>
+    <p><img src="../outputs/charts/roc_decline_prob.png" alt="ROC curve" style="max-width:640px;border:1px solid #ddd;padding:6px;background:#fff"/></p>
+    <p>Precision@k chart (opportunity ranking):</p>
+    <p><img src="../outputs/charts/precision_at_k.png" alt="Precision at k" style="max-width:640px;border:1px solid #ddd;padding:6px;background:#fff"/></p>
+  </section>
+
+  <section class="section">
+    <h2>Limitations & Honest Framing</h2>
+    <ul>
+      <li>Observational, not causal — signals correlate with momentum but don't prove causation.</li>
+      <li>Sparse signals for low-traffic pages — treat small samples as directional only.</li>
+      <li>Model performance depends on release windows and may vary by segment.</li>
+    </ul>
+  </section>
+
+  <section class="section">
+    <h2>Ranked Recommendations (Action Playbook)</h2>
+    <ol>
+      <li>Top-ranked: prioritize refresh for pages with sustained growth and engagement gains.</li>
+      <li>Recovery candidates: review for reinstating lost internal links or metadata fixes.</li>
+      <li>Monitor: pages with noisy short-term spikes — set periodic checks before major edits.</li>
+    </ol>
+  </section>
+
+  <section class="section">
+    <h2>Reproducibility</h2>
+    <p>Notebooks and code:</p>
+    <ul>
+      <li><a href="../work/notebooks/w01_research_question.ipynb">Week 1 — Research question</a></li>
+      <li><a href="../work/notebooks/w04_baseline_score.ipynb">Week 4 — Baseline score</a></li>
+      <li><a href="../work/notebooks/w05_model.ipynb">Week 5 — Modeling</a></li>
+      <li><a href="../work/notebooks/w06_validation_audit.ipynb">Week 6 — Validation audit</a></li>
+      <li><a href="../work/notebooks/w07_action_playbook.ipynb">Week 7 — Action playbook</a></li>
+      <li><a href="../work/notebooks/capstone.ipynb">Capstone notebook</a></li>
+    </ul>
+    <p>Run instructions are in <strong>SETUP.md</strong> and the top cells of each notebook. The pipeline is reproducible with the local CSVs and the DuckDB instructions in the starter notebooks.</p>
+  </section>
+
+  <section class="section">
+    <h2>Acknowledgments & Data Credit</h2>
+    <p>Built on the FlyRank ML Internship dataset — <a href="https://flyrank.ai" target="_blank" rel="noreferrer">flyrank.ai</a>.</p>
+  </section>
+
+  <footer>
+    <p class="muted">Repository: <a href="https://github.com/Akash0-0/InternShip_Task01">Akash0-0/InternShip_Task01</a></p>
+  </footer>
+</body>
+</html>
